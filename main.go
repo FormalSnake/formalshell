@@ -89,29 +89,37 @@ func handleInput(input string, rl *readline.Instance) {
 		return
 	}
 
-	// Save original input to history before processing aliases
+	// Save the full original input to history before any processing
 	if input = strings.TrimSpace(input); input != "" {
+		// Save the complete command including chains and pipes
 		commandHistory[input] = true
 		
-		// Also save the expanded alias command if it exists
-		parts := strings.Fields(input)
-		if len(parts) > 0 {
-			if alias, exists := aliases[parts[0]]; exists {
-				expandedCmd := alias
-				if len(parts) > 1 {
-					expandedCmd += " " + strings.Join(parts[1:], " ")
+		// Also save individual commands from chains
+		commands := strings.Split(input, "&&")
+		for _, cmd := range commands {
+			cmd = strings.TrimSpace(cmd)
+			if cmd != "" {
+				commandHistory[cmd] = true
+				
+				// Handle piped commands individually too
+				if strings.Contains(cmd, "|") {
+					pipedCmds := strings.Split(cmd, "|")
+					for _, pipedCmd := range pipedCmds {
+						if pipedCmd = strings.TrimSpace(pipedCmd); pipedCmd != "" {
+							commandHistory[pipedCmd] = true
+						}
+					}
 				}
-				commandHistory[expandedCmd] = true
 			}
 		}
 		
-		// Save history after each command
+		// Save history after processing
 		if err := saveHistory(rl); err != nil {
 			fmt.Printf("Error saving history: %v\n", err)
 		}
 	}
 
-	// Split by `&&` for command chaining
+	// Process the commands
 	commands := strings.Split(input, "&&")
 	for _, cmd := range commands {
 		cmd = strings.TrimSpace(cmd)
