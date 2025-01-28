@@ -47,11 +47,8 @@ func loadHistory(rl *readline.Instance) error {
 	for _, line := range lines {
 		if line = strings.TrimSpace(line); line != "" {
 			rl.SaveHistory(line)
-			// Also add to commandHistory map
-			parts := strings.Fields(line)
-			if len(parts) > 0 {
-				commandHistory[parts[0]] = true
-			}
+			// Add full command line to history
+			commandHistory[line] = true
 		}
 	}
 	return nil
@@ -92,10 +89,9 @@ func handleInput(input string, rl *readline.Instance) {
 		return
 	}
 
-	// Add command to history
-	parts := strings.Fields(input)
-	if len(parts) > 0 {
-		commandHistory[parts[0]] = true
+	// Add full command to history
+	if input = strings.TrimSpace(input); input != "" {
+		commandHistory[input] = true
 		// Save history after each command
 		if err := saveHistory(rl); err != nil {
 			fmt.Printf("Error saving history: %v\n", err)
