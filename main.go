@@ -12,8 +12,12 @@ import (
 	"github.com/chzyer/readline"
 )
 
-// commandHistory stores unique commands that have been executed
-var commandHistory = make(map[string]bool)
+// Global state
+var (
+	commandHistory = make(map[string]bool)
+	aliases       = make(map[string]string)
+	customPath    = os.Getenv("PATH")
+)
 
 // displayPrompt generates the shell prompt, showing only the current folder name.
 func displayPrompt() string {
@@ -62,6 +66,16 @@ func handleCommand(input string) {
 	}
 
 	command := parts[0]
+	
+	// Check aliases first
+	if alias, exists := aliases[command]; exists {
+		// Replace the command with its alias
+		aliasParts := strings.Fields(alias)
+		command = aliasParts[0]
+		args := append(aliasParts[1:], parts[1:]...)
+		parts = append([]string{command}, args...)
+	}
+	
 	args := parts[1:]
 
 	// Handle built-in commands
@@ -128,6 +142,7 @@ func handlePipes(input string) {
 // executeCommand runs an external command.
 func executeCommand(command string, args []string) {
 	cmd := exec.Command(command, args...)
+	cmd.Env = append(os.Environ(), "PATH="+customPath)
 	cmd.Stdout = os.Stdout // Output to the shell's stdout
 	cmd.Stderr = os.Stderr // Output errors to the shell's stderr
 	cmd.Stdin = os.Stdin   // Allow input for commands like `cat`
@@ -156,12 +171,43 @@ func loadConfig() {
 		return
 	}
 
-	// Execute each line as a command
+	// Execute each line as a config command
 	lines := strings.Split(string(content), "\n")
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
-		if line != "" && !strings.HasPrefix(line, "#") {
-			handleInput(line)
+		if line == "" || strings.HasPrefix(line, "#") {
+			continue
+		}
+
+		parts := strings.Fields(line)
+		if len(parts) == 0 {
+			continue
+		}
+
+		switch parts[0] {
+		case "alias":
+			if len(parts) >= 2 {
+				aliasCmd := strings.Join(parts[1:], " ")
+				if idx := strings.Index(aliasCmd, "="); idx >= 0 {
+					name := strings.TrimSpace(aliasCmd[:idx])
+					value := strings.Trim(strings.TrimSpace(aliasCmd[idx+1:]), "'\"")
+					aliases[name] = value
+				}
+			}
+		case "export":
+			if len(parts) >= 2 {
+				for _, exp := range parts[1:] {
+					if strings.HasPrefix(exp, "PATH=") {
+						newPath := strings.TrimPrefix(exp, "PATH=")
+						newPath = strings.Trim(newPath, "'\"")
+						if customPath == "" {
+							customPath = newPath
+						} else {
+							customPath = newPath + ":" + customPath
+						}
+					}
+				}
+			}
 		}
 	}
 }
