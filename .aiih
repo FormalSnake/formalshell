@@ -296,3 +296,27 @@
 +cmds/ls.go:68:20: undefined: filepath
 +Command exited with status 1
 +
+
+# 2025-01-28 17:38:38.118406
++/code Now make it so that the .formalsh config is moved to the formalshell dir in the .config
+
+# 2025-01-28 17:39:16.252380
++/run mkdir -p ~/.config/formalshell
+
+# 2025-01-28 17:39:16.252829
++/run mkdir -p ~/.config/formalshell
+
+# 2025-01-28 17:43:33.316952
++/add main.go
+
+# 2025-01-28 17:43:43.505774
++/code When a command is interrupted, the shell exits
+
+# 2025-01-28 17:43:54.456120
++n
+
+# 2025-01-28 17:44:50.439254
++/code It still does
+
+# 2025-01-28 17:45:08.066452
++n
