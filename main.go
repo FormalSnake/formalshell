@@ -137,7 +137,39 @@ func executeCommand(command string, args []string) {
 	}
 }
 
+func loadConfig() {
+	// Get the config file path
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return
+	}
+	configPath := filepath.Join(homeDir, ".config", ".formalsh")
+
+	// Check if config file exists
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
+		return
+	}
+
+	// Read and execute the config file
+	content, err := os.ReadFile(configPath)
+	if err != nil {
+		return
+	}
+
+	// Execute each line as a command
+	lines := strings.Split(string(content), "\n")
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line != "" && !strings.HasPrefix(line, "#") {
+			handleInput(line)
+		}
+	}
+}
+
 func main() {
+	// Load config file before starting shell
+	loadConfig()
+
 	// Configure readline
 	config := &readline.Config{
 		AutoComplete:           completions.CreateCompleter(commandHistory),
