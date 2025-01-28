@@ -152,9 +152,8 @@ func main() {
 		AutoComplete:          createCompleter(),
 		InterruptPrompt:       "^C",
 		EOFPrompt:            "exit",
-		DisableAutoSaveHistory: true,
+		DisableAutoSaveHistory: false,  // Enable auto-save history
 		HistorySearchFold:      true,
-		VimMode:               true,
 	}
 
 	rl, err := readline.NewEx(config)
