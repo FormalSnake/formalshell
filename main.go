@@ -222,8 +222,14 @@ func main() {
 	for {
 		rl.SetPrompt(displayPrompt())
 		line, err := rl.Readline()
-		if err != nil { // io.EOF, readline.ErrInterrupt
-			break
+		if err != nil {
+			if err == readline.ErrInterrupt {
+				// For Ctrl+C, just continue the loop
+				continue
+			} else {
+				// For other errors (like EOF from Ctrl+D), exit
+				break
+			}
 		}
 		handleInput(line)
 
