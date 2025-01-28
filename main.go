@@ -57,11 +57,11 @@ func saveHistory(rl *readline.Instance) error {
 		return nil
 	}
 
-	history := rl.GetHistory()
+	// Get all history items from readline's buffer
 	var lines []string
-	for _, item := range history.Deque {
-		if str, ok := item.(string); ok {
-			lines = append(lines, str)
+	for _, line := range rl.GetHistoryItems() {
+		if line = strings.TrimSpace(line); line != "" {
+			lines = append(lines, line)
 		}
 	}
 
