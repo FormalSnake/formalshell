@@ -155,7 +155,6 @@ func main() {
 		EOFPrompt:            "exit",
 		DisableAutoSaveHistory: true,
 		HistorySearchFold:      true,
-		AutoCompleteAfterSpace: true,
 	}
 
 	rl, err := readline.NewEx(config)
