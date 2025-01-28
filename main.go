@@ -165,50 +165,18 @@ func loadConfig() {
 		return
 	}
 
-	// Read and execute the config file
-	content, err := os.ReadFile(configPath)
-	if err != nil {
-		return
+	// Execute the config file using system shell
+	cmd := exec.Command("/bin/sh", configPath)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	
+	if err := cmd.Run(); err != nil {
+		fmt.Printf("Error loading config: %v\n", err)
 	}
 
-	// Execute each line as a config command
-	lines := strings.Split(string(content), "\n")
-	for _, line := range lines {
-		line = strings.TrimSpace(line)
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
-
-		parts := strings.Fields(line)
-		if len(parts) == 0 {
-			continue
-		}
-
-		switch parts[0] {
-		case "alias":
-			if len(parts) >= 2 {
-				aliasCmd := strings.Join(parts[1:], " ")
-				if idx := strings.Index(aliasCmd, "="); idx >= 0 {
-					name := strings.TrimSpace(aliasCmd[:idx])
-					value := strings.Trim(strings.TrimSpace(aliasCmd[idx+1:]), "'\"")
-					aliases[name] = value
-				}
-			}
-		case "export":
-			if len(parts) >= 2 {
-				for _, exp := range parts[1:] {
-					if strings.HasPrefix(exp, "PATH=") {
-						newPath := strings.TrimPrefix(exp, "PATH=")
-						newPath = strings.Trim(newPath, "'\"")
-						if customPath == "" {
-							customPath = newPath
-						} else {
-							customPath = newPath + ":" + customPath
-						}
-					}
-				}
-			}
-		}
+	// Update PATH from environment after config execution
+	if newPath := os.Getenv("PATH"); newPath != "" {
+		customPath = newPath
 	}
 }
 
