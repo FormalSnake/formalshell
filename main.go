@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -309,11 +310,15 @@ func main() {
 		if err != nil {
 			if err == readline.ErrInterrupt {
 				// For Ctrl+C, just continue the loop
+				fmt.Println()  // Add newline for cleaner output
 				continue
-			} else {
-				// For other errors (like EOF from Ctrl+D), exit
+			} else if err == io.EOF {
+				// Only exit on EOF (Ctrl+D)
 				break
 			}
+			// For other errors, print and continue
+			fmt.Printf("Error: %v\n", err)
+			continue
 		}
 		handleInput(line, instance)
 
