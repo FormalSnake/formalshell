@@ -47,6 +47,11 @@ func loadHistory(rl *readline.Instance) error {
 	for _, line := range lines {
 		if line = strings.TrimSpace(line); line != "" {
 			rl.SaveHistory(line)
+			// Also add to commandHistory map
+			parts := strings.Fields(line)
+			if len(parts) > 0 {
+				commandHistory[parts[0]] = true
+			}
 		}
 	}
 	return nil
@@ -91,6 +96,8 @@ func handleInput(input string) {
 	parts := strings.Fields(input)
 	if len(parts) > 0 {
 		commandHistory[parts[0]] = true
+		// Save history after each command
+		saveHistory(rl)
 	}
 
 	// Split by `&&` for command chaining
