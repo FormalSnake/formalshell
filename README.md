@@ -16,7 +16,7 @@ This is a simple shell written in Go that provides a minimalistic interface for 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/kyandesutter/formalshell.git
+git clone https://github.com/formalsnake/formalshell.git
 ```
 
 2. Build the executable:
