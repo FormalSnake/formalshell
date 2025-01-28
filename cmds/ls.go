@@ -4,7 +4,31 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strings"
 )
+
+type fileInfo struct {
+	name        string
+	size        int64
+	permissions string
+	fileType    string
+	icon        string
+	color       string
+}
+
+// formatSize converts size in bytes to human readable format
+func formatSize(size int64) string {
+	const unit = 1024
+	if size < unit {
+		return fmt.Sprintf("%d B", size)
+	}
+	div, exp := int64(unit), 0
+	for n := size / unit; n >= unit; n /= unit {
+		div *= unit
+		exp++
+	}
+	return fmt.Sprintf("%.1f %cB", float64(size)/float64(div), "KMGTPE"[exp])
+}
 
 // ANSI color codes
 const (
@@ -40,36 +64,110 @@ func CustomLS() {
 		return
 	}
 
-	// Sort entries alphabetically
-	sort.Slice(entries, func(i, j int) bool {
-		return entries[i].Name() < entries[j].Name()
-	})
-
-	// Display each entry with appropriate color and icon
+	var files []fileInfo
+	
+	// Collect file information
 	for _, entry := range entries {
-		name := entry.Name()
-		if entry.IsDir() {
-			// Directory: blue color with folder icon
-			fmt.Printf("%s%s %s%s\n", blue, iconFolder, name, reset)
-		} else {
-			info, err := entry.Info()
-			if err != nil {
-				fmt.Println("Error:", err)
-				continue
-			}
+		info, err := entry.Info()
+		if err != nil {
+			continue
+		}
 
+		var fileType, icon, color string
+		if entry.IsDir() {
+			fileType = "Directory"
+			icon = iconFolder
+			color = blue
+		} else {
 			mode := info.Mode()
 			switch {
 			case mode&os.ModeSymlink != 0:
-				// Symlink: yellow color with symlink icon
-				fmt.Printf("%s%s %s%s\n", yellow, iconSymlink, name, reset)
-			case mode&0111 != 0: // Executable files
-				// Executable: cyan color with executable icon
-				fmt.Printf("%s%s %s%s\n", cyan, iconExecutable, name, reset)
+				fileType = "Symlink"
+				icon = iconSymlink
+				color = yellow
+			case mode&0111 != 0:
+				fileType = "Executable"
+				icon = iconExecutable
+				color = cyan
 			default:
-				// Regular files: green color with file icon
-				fmt.Printf("%s%s %s%s\n", green, iconFile, name, reset)
+				fileType = "File"
+				icon = iconFile
+				color = green
 			}
 		}
+
+		files = append(files, fileInfo{
+			name:        info.Name(),
+			size:        info.Size(),
+			permissions: info.Mode().String(),
+			fileType:    fileType,
+			icon:        icon,
+			color:       color,
+		})
 	}
+
+	// Sort files by type first, then by name
+	sort.Slice(files, func(i, j int) bool {
+		if files[i].fileType != files[j].fileType {
+			return files[i].fileType < files[j].fileType
+		}
+		return files[i].name < files[j].name
+	})
+
+	// Find maximum lengths for column widths
+	maxName := 4 // "NAME"
+	maxSize := 4 // "SIZE"
+	maxType := 4 // "TYPE"
+	maxPerm := 11 // "PERMISSIONS"
+
+	for _, f := range files {
+		if len(f.name) > maxName {
+			maxName = len(f.name)
+		}
+		sizeStr := formatSize(f.size)
+		if len(sizeStr) > maxSize {
+			maxSize = len(sizeStr)
+		}
+		if len(f.fileType) > maxType {
+			maxType = len(f.fileType)
+		}
+	}
+
+	// Print header
+	fmt.Printf("┌%s┬%s┬%s┬%s┐\n",
+		strings.Repeat("─", maxName+4),
+		strings.Repeat("─", maxSize+2),
+		strings.Repeat("─", maxType+2),
+		strings.Repeat("─", maxPerm+2))
+	
+	fmt.Printf("│ %-*s │ %-*s │ %-*s │ %-*s │\n",
+		maxName+2, "NAME",
+		maxSize, "SIZE",
+		maxType, "TYPE",
+		maxPerm, "PERMISSIONS")
+	
+	fmt.Printf("├%s┼%s┼%s┼%s┤\n",
+		strings.Repeat("─", maxName+4),
+		strings.Repeat("─", maxSize+2),
+		strings.Repeat("─", maxType+2),
+		strings.Repeat("─", maxPerm+2))
+
+	// Print files
+	for _, f := range files {
+		sizeStr := formatSize(f.size)
+		fmt.Printf("│ %s%s %s%-*s%s │ %*s │ %-*s │ %-*s │\n",
+			f.color, f.icon, reset,
+			maxName, f.name,
+			reset,
+			maxSize, sizeStr,
+			maxType, f.fileType,
+			maxPerm, f.permissions)
+	}
+
+	// Print footer
+	fmt.Printf("└%s┴%s┴%s┴%s┘\n",
+		strings.Repeat("─", maxName+4),
+		strings.Repeat("─", maxSize+2),
+		strings.Repeat("─", maxType+2),
+		strings.Repeat("─", maxPerm+2))
 }
