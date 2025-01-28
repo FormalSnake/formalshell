@@ -149,12 +149,12 @@ func createCompleter() *readline.PrefixCompleter {
 func main() {
 	// Configure readline
 	config := &readline.Config{
-		Prompt:                 displayPrompt(),
 		AutoComplete:          createCompleter(),
 		InterruptPrompt:       "^C",
 		EOFPrompt:            "exit",
 		DisableAutoSaveHistory: true,
 		HistorySearchFold:      true,
+		VimMode:               true,
 	}
 
 	rl, err := readline.NewEx(config)
@@ -164,6 +164,7 @@ func main() {
 	defer rl.Close()
 
 	for {
+		rl.SetPrompt(displayPrompt())
 		line, err := rl.Readline()
 		if err != nil { // io.EOF, readline.ErrInterrupt
 			break
