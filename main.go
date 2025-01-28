@@ -149,10 +149,13 @@ func createCompleter() *readline.PrefixCompleter {
 func main() {
 	// Configure readline
 	config := &readline.Config{
-		Prompt:          displayPrompt(),
-		AutoComplete:    createCompleter(),
-		InterruptPrompt: "^C",
-		EOFPrompt:      "exit",
+		Prompt:                 displayPrompt(),
+		AutoComplete:          createCompleter(),
+		InterruptPrompt:       "^C",
+		EOFPrompt:            "exit",
+		DisableAutoSaveHistory: true,
+		HistorySearchFold:      true,
+		AutoCompleteAfterSpace: true,
 	}
 
 	rl, err := readline.NewEx(config)
@@ -168,8 +171,9 @@ func main() {
 		}
 		handleInput(line)
 		
-		// Update completer with new history
+		// Update completer with new history and save to history
 		rl.Config.AutoComplete = createCompleter()
+		rl.SaveHistory(line)
 	}
 
 	fmt.Println("Shell exited.")
