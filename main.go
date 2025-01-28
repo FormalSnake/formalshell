@@ -57,11 +57,11 @@ func saveHistory(rl *readline.Instance) error {
 		return nil
 	}
 
-	// Get all history items from readline's buffer
+	// Get all history items from the command history map
 	var lines []string
-	for _, line := range rl.GetHistoryItems() {
-		if line = strings.TrimSpace(line); line != "" {
-			lines = append(lines, line)
+	for cmd := range commandHistory {
+		if cmd = strings.TrimSpace(cmd); cmd != "" {
+			lines = append(lines, cmd)
 		}
 	}
 
