@@ -180,9 +180,10 @@ func loadConfig() {
 		return
 	}
 
-	// First source system profile to get basic PATH
+	// First source system profile and zshenv to get basic PATH and env vars
 	script := `
 		. /etc/profile
+		[ -f ~/.zshenv ] && . ~/.zshenv
 		env > "$TMPDIR/formalsh_env"
 	`
 	tmpFile, err := os.CreateTemp("", "formalsh_*.sh")
