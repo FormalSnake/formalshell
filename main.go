@@ -89,9 +89,22 @@ func handleInput(input string, rl *readline.Instance) {
 		return
 	}
 
-	// Add full command to history
+	// Save original input to history before processing aliases
 	if input = strings.TrimSpace(input); input != "" {
 		commandHistory[input] = true
+		
+		// Also save the expanded alias command if it exists
+		parts := strings.Fields(input)
+		if len(parts) > 0 {
+			if alias, exists := aliases[parts[0]]; exists {
+				expandedCmd := alias
+				if len(parts) > 1 {
+					expandedCmd += " " + strings.Join(parts[1:], " ")
+				}
+				commandHistory[expandedCmd] = true
+			}
+		}
+		
 		// Save history after each command
 		if err := saveHistory(rl); err != nil {
 			fmt.Printf("Error saving history: %v\n", err)
