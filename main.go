@@ -137,14 +137,13 @@ func executeCommand(command string, args []string) {
 	}
 }
 
-
 func main() {
 	// Configure readline
 	config := &readline.Config{
-		AutoComplete:          completions.CreateCompleter(commandHistory),
-		InterruptPrompt:       "^C",
-		EOFPrompt:            "exit",
-		DisableAutoSaveHistory: false,  // Enable auto-save history
+		AutoComplete:           completions.CreateCompleter(commandHistory),
+		InterruptPrompt:        "^C",
+		EOFPrompt:              "exit",
+		DisableAutoSaveHistory: false, // Enable auto-save history
 		HistorySearchFold:      true,
 	}
 
@@ -161,7 +160,7 @@ func main() {
 			break
 		}
 		handleInput(line)
-		
+
 		// Update completer with new history and save to history
 		rl.Config.AutoComplete = completions.CreateCompleter(commandHistory)
 		rl.SaveHistory(line)
