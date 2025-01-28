@@ -159,12 +159,21 @@ func handleCommand(input string) {
 		fmt.Println("Goodbye!")
 		os.Exit(0)
 	case "cd":
+		// Save the full cd command before executing
+		if len(args) > 0 {
+			fullCmd := fmt.Sprintf("cd %s", strings.Join(args, " "))
+			commandHistory[fullCmd] = true
+		}
 		cmds.HandleCD(args)
 		return
 	case "ls":
 		cmds.CustomLS()
 		return
 	}
+
+	// Save the full command before executing
+	fullCmd := fmt.Sprintf("%s %s", command, strings.Join(args, " "))
+	commandHistory[strings.TrimSpace(fullCmd)] = true
 
 	// Execute external commands
 	executeCommand(command, args)
