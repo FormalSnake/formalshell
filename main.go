@@ -141,14 +141,36 @@ func handlePipes(input string) {
 
 // executeCommand runs an external command.
 func executeCommand(command string, args []string) {
-	cmd := exec.Command(command, args...)
+	// Create a shell script that will execute the command
+	script := fmt.Sprintf(". ~/.config/.formalsh\n%s %s", command, strings.Join(args, " "))
+	
+	tmpFile, err := os.CreateTemp("", "formalsh_cmd_*.sh")
+	if err != nil {
+		fmt.Printf("Error creating temp file: %v\n", err)
+		return
+	}
+	defer os.Remove(tmpFile.Name())
+
+	if _, err := tmpFile.WriteString(script); err != nil {
+		fmt.Printf("Error writing temp file: %v\n", err)
+		return
+	}
+	tmpFile.Close()
+
+	// Execute the command in a shell context
+	cmd := exec.Command("/bin/sh", tmpFile.Name())
 	cmd.Env = append(os.Environ(), "PATH="+customPath)
-	cmd.Stdout = os.Stdout // Output to the shell's stdout
-	cmd.Stderr = os.Stderr // Output errors to the shell's stderr
-	cmd.Stdin = os.Stdin   // Allow input for commands like `cat`
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	cmd.Stdin = os.Stdin
 
 	if err := cmd.Run(); err != nil {
-		fmt.Printf("%s: command not found\n", command)
+		if exitErr, ok := err.(*exec.ExitError); ok {
+			// Preserve the exit code but don't show "command not found"
+			os.Exit(exitErr.ExitCode())
+		} else {
+			fmt.Printf("%s: command not found\n", command)
+		}
 	}
 }
 
