@@ -140,7 +140,7 @@ func handleCommand(input string) {
 		cmds.HandleCD(args)
 		return
 	case "ls":
-		cmds.CustomLS()
+		cmds.CustomLS(args...)
 		return
 	}
 

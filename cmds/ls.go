@@ -49,16 +49,30 @@ const (
 )
 
 // customLS is a replacement for the `ls` command that shows files and folders with colors and icons.
-func CustomLS() {
-	// Get current directory
-	wd, err := os.Getwd()
+func CustomLS(args ...string) {
+	// Determine target directory
+	targetDir := "."
+	if len(args) > 0 {
+		targetDir = args[0]
+	}
+
+	// Handle ~ in path
+	if strings.HasPrefix(targetDir, "~") {
+		homeDir, err := os.UserHomeDir()
+		if err == nil {
+			targetDir = strings.Replace(targetDir, "~", homeDir, 1)
+		}
+	}
+
+	// Get absolute path
+	targetDir, err := filepath.Abs(targetDir)
 	if err != nil {
-		fmt.Println("Error:", err)
+		fmt.Printf("Error resolving path: %v\n", err)
 		return
 	}
 
 	// Read directory contents
-	entries, err := os.ReadDir(wd)
+	entries, err := os.ReadDir(targetDir)
 	if err != nil {
 		fmt.Println("Error:", err)
 		return
