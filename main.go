@@ -86,7 +86,7 @@ func displayPrompt() string {
 }
 
 // handleInput processes user input, including pipes and command chaining.
-func handleInput(input string) {
+func handleInput(input string, rl *readline.Instance) {
 	input = strings.TrimSpace(input)
 	if input == "" {
 		return
@@ -97,7 +97,7 @@ func handleInput(input string) {
 	if len(parts) > 0 {
 		commandHistory[parts[0]] = true
 		// Save history after each command
-		if err := saveHistory(instance); err != nil {
+		if err := saveHistory(rl); err != nil {
 			fmt.Printf("Error saving history: %v\n", err)
 		}
 	}
@@ -320,7 +320,7 @@ func main() {
 				break
 			}
 		}
-		handleInput(line)
+		handleInput(line, instance)
 
 		// Update completer with new history and save to history
 		instance.Config.AutoComplete = completions.CreateCompleter(commandHistory)
