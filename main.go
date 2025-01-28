@@ -158,23 +158,46 @@ func loadConfig() {
 		return
 	}
 
+	// First source system profile to get basic PATH
+	script := `
+		. /etc/profile
+		env > "$TMPDIR/formalsh_env"
+	`
+	tmpFile, err := os.CreateTemp("", "formalsh_*.sh")
+	if err == nil {
+		defer os.Remove(tmpFile.Name())
+		if _, err := tmpFile.WriteString(script); err == nil {
+			tmpFile.Close()
+			cmd := exec.Command("/bin/sh", tmpFile.Name())
+			cmd.Run()
+
+			// Read and apply environment
+			if envData, err := os.ReadFile(os.Getenv("TMPDIR") + "/formalsh_env"); err == nil {
+				envVars := strings.Split(string(envData), "\n")
+				for _, line := range envVars {
+					if parts := strings.SplitN(line, "=", 2); len(parts) == 2 {
+						os.Setenv(parts[0], parts[1])
+						if parts[0] == "PATH" {
+							customPath = parts[1]
+						}
+					}
+				}
+				os.Remove(os.Getenv("TMPDIR") + "/formalsh_env")
+			}
+		}
+	}
+
+	// Then load our specific config
 	configPath := filepath.Join(homeDir, ".config", ".formalsh")
 	if _, err := os.Stat(configPath); err == nil {
 		cmd := exec.Command("/bin/sh", configPath)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
-		cmd.Env = os.Environ() // Pass current environment
+		cmd.Env = os.Environ()
 		if err := cmd.Run(); err != nil {
 			fmt.Printf("Error loading formalsh config: %v\n", err)
 		}
 	}
-
-	// Update PATH from environment after config execution
-	if newPath := os.Getenv("PATH"); newPath != "" {
-		customPath = newPath
-	}
-
-	fmt.Println("Welcome to the formal shell!")
 }
 
 func main() {
