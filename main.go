@@ -5,6 +5,8 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"os/signal"
+	"syscall"
 	"path/filepath"
 	"strings"
 
@@ -195,6 +197,11 @@ func handlePipes(input string) {
 
 // executeCommand runs an external command.
 func executeCommand(command string, args []string) {
+	// Set up signal handling
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT)
+	defer signal.Stop(sigChan)
+
 	// Create a shell script that will execute the command
 	script := fmt.Sprintf(". ~/.config/formalshell/config\n%s %s", command, strings.Join(args, " "))
 	
@@ -218,13 +225,30 @@ func executeCommand(command string, args []string) {
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
 
-	err = cmd.Run()
+	// Start command in background
+	if err := cmd.Start(); err != nil {
+		fmt.Printf("%s: command not found\n", command)
+		return
+	}
+
+	// Handle command interruption
+	go func() {
+		select {
+		case <-sigChan:
+			if cmd.Process != nil {
+				cmd.Process.Signal(syscall.SIGINT)
+			}
+		}
+	}()
+
+	// Wait for command completion
+	err = cmd.Wait()
 	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			// Just print the error but don't exit the shell
-			fmt.Printf("Command exited with status %d\n", exitErr.ExitCode())
-		} else {
-			fmt.Printf("%s: command not found\n", command)
+			// Don't print status for interrupted commands
+			if exitErr.ExitCode() != int(syscall.SIGINT) {
+				fmt.Printf("Command exited with status %d\n", exitErr.ExitCode())
+			}
 		}
 		return
 	}
