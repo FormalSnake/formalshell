@@ -147,15 +147,34 @@ func getDirCompletions(path string) []string {
 		}
 	}
 	
+	// If path is empty or ".", use current directory
+	if path == "" || path == "." {
+		path = "."
+	}
+	
 	// Get the directory to search in and the prefix to match
-	searchDir := filepath.Dir(path)
-	prefix := filepath.Base(path)
+	var searchDir string
+	var prefix string
+	
+	if filepath.IsAbs(path) {
+		searchDir = filepath.Dir(path)
+		prefix = filepath.Base(path)
+	} else {
+		// For relative paths, search in current directory
+		searchDir = "."
+		prefix = path
+	}
 	
 	// List all directories
 	if entries, err := os.ReadDir(searchDir); err == nil {
 		for _, entry := range entries {
-			if entry.IsDir() && strings.HasPrefix(entry.Name(), prefix) {
-				completions = append(completions, entry.Name()+"/")
+			name := entry.Name()
+			if entry.IsDir() && strings.HasPrefix(name, prefix) {
+				// Return just the completion part, not the full name
+				completion := name[len(prefix):]
+				if completion != "" {
+					completions = append(completions, completion)
+				}
 			}
 		}
 	}
