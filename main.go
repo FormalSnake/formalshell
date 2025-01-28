@@ -97,7 +97,9 @@ func handleInput(input string) {
 	if len(parts) > 0 {
 		commandHistory[parts[0]] = true
 		// Save history after each command
-		saveHistory(rl)
+		if err := saveHistory(instance); err != nil {
+			fmt.Printf("Error saving history: %v\n", err)
+		}
 	}
 
 	// Split by `&&` for command chaining
@@ -294,21 +296,21 @@ func main() {
 		HistorySearchFold:      true,
 	}
 
-	rl, err := readline.NewEx(config)
+	instance, err := readline.NewEx(config)
 	if err != nil {
 		panic(err)
 	}
-	defer rl.Close()
+	defer instance.Close()
 
 	// Load command history
-	if err := loadHistory(rl); err != nil {
+	if err := loadHistory(instance); err != nil {
 		fmt.Printf("Error loading history: %v\n", err)
 	}
-	defer saveHistory(rl)
+	defer saveHistory(instance)
 
 	for {
-		rl.SetPrompt(displayPrompt())
-		line, err := rl.Readline()
+		instance.SetPrompt(displayPrompt())
+		line, err := instance.Readline()
 		if err != nil {
 			if err == readline.ErrInterrupt {
 				// For Ctrl+C, just continue the loop
@@ -321,8 +323,8 @@ func main() {
 		handleInput(line)
 
 		// Update completer with new history and save to history
-		rl.Config.AutoComplete = completions.CreateCompleter(commandHistory)
-		rl.SaveHistory(line)
+		instance.Config.AutoComplete = completions.CreateCompleter(commandHistory)
+		instance.SaveHistory(line)
 	}
 
 	fmt.Println("Shell exited.")
