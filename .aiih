@@ -212,3 +212,12 @@
 
 # 2025-01-28 16:43:52.141125
 +N
+
+# 2025-01-28 16:45:59.700505
++/code I want it to read the .zshenv aswell for secret variables
+
+# 2025-01-28 16:48:58.552801
++/ask What command is it to set it as my default shell?
+
+# 2025-01-28 16:49:18.169724
++n
