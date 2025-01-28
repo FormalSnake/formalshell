@@ -65,7 +65,7 @@ func CustomLS() {
 	}
 
 	var files []fileInfo
-	
+
 	// Collect file information
 	for _, entry := range entries {
 		info, err := entry.Info()
@@ -115,9 +115,9 @@ func CustomLS() {
 	})
 
 	// Find maximum lengths for column widths
-	maxName := 4 // "NAME"
-	maxSize := 4 // "SIZE"
-	maxType := 4 // "TYPE"
+	maxName := 4  // "NAME"
+	maxSize := 4  // "SIZE"
+	maxType := 4  // "TYPE"
 	maxPerm := 11 // "PERMISSIONS"
 
 	for _, f := range files {
@@ -134,18 +134,18 @@ func CustomLS() {
 	}
 
 	// Print header
-	fmt.Printf("┌%s┬%s┬%s┬%s┐\n",
+	fmt.Printf("╭%s┬%s┬%s┬%s╮\n",
 		strings.Repeat("─", maxName+4),
 		strings.Repeat("─", maxSize+2),
 		strings.Repeat("─", maxType+2),
 		strings.Repeat("─", maxPerm+2))
-	
+
 	fmt.Printf("│ %-*s │ %-*s │ %-*s │ %-*s │\n",
 		maxName+2, "NAME",
 		maxSize, "SIZE",
 		maxType, "TYPE",
 		maxPerm, "PERMISSIONS")
-	
+
 	fmt.Printf("├%s┼%s┼%s┼%s┤\n",
 		strings.Repeat("─", maxName+4),
 		strings.Repeat("─", maxSize+2),
@@ -165,7 +165,7 @@ func CustomLS() {
 	}
 
 	// Print footer
-	fmt.Printf("└%s┴%s┴%s┴%s┘\n",
+	fmt.Printf("╰%s┴%s┴%s┴%s╯\n",
 		strings.Repeat("─", maxName+4),
 		strings.Repeat("─", maxSize+2),
 		strings.Repeat("─", maxType+2),

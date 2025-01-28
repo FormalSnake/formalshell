@@ -1,0 +1,120 @@
+
+# 2025-01-28 13:56:43.619713
++/add main.go
+
+# 2025-01-28 13:56:52.000060
++/add cmds/cd.go
+
+# 2025-01-28 13:56:54.216081
++/add cmds/ls.go
+
+# 2025-01-28 13:57:27.960711
++/code Please make it so that I can use my arrow keys to navigate my input
+
+# 2025-01-28 13:58:39.970819
++/ask What is this?
+
+# 2025-01-28 13:58:57.563464
++/add main.go
+
+# 2025-01-28 13:59:05.470737
++/code Please make it so that I can use my arrow keys to navigate my input
+
+# 2025-01-28 14:00:14.832824
++/add main.go
+
+# 2025-01-28 14:00:16.296906
++/code Please make it so that I can use my arrow keys to navigate my input
+
+# 2025-01-28 14:01:12.398654
++y
+
+# 2025-01-28 14:01:12.408147
++/run go get github.com/chzyer/readline
+
+# 2025-01-28 14:01:12.408236
++/run go get github.com/chzyer/readline
+
+# 2025-01-28 14:01:27.661906
++N
+
+# 2025-01-28 14:03:35.562746
++/ask How does the new feature you implemented work?
+
+# 2025-01-28 14:05:04.447445
++/code Can you make it so that there is a custom shell autocompletion? For example if I already used the neofetch command before and I type neo it must show fetch in gray and I can press tab to autocomplete
+
+# 2025-01-28 14:05:23.573294
++D
+
+# 2025-01-28 14:07:13.893719
++/code Can you make it so that the prompt on the right side displays the current git branch (if available) in green? the input must be in between the prompt and the git branch as the git branch will be at the right side of the screen
+
+# 2025-01-28 14:07:55.225627
++/code ./main.go:62:2: declared and not used: branchDisplay
+
+# 2025-01-28 14:08:55.727740
++/code the user input displays after the branch name
+
+# 2025-01-28 14:09:14.980086
++/code ./main.go:194:17: cannot use func() (string, error) {…} (value of type func() (string, error)) as string value in struct literal
+
+# 2025-01-28 14:09:32.638226
++/code ./main.go:194:20: cannot use func() string {…} (value of type func() string) as string value in struct literal
+
+# 2025-01-28 14:09:51.856551
++/code ./main.go:199:9: config.SetPrompt undefined (type *readline.Config has no field or method SetPrompt)
+
+# 2025-01-28 14:10:08.250653
++/undo
+
+# 2025-01-28 14:11:33.964050
++/code I want to be able to see autocomplete as I am typing like in a code editor too
+
+# 2025-01-28 14:11:55.743061
++/code ./main.go:158:3: unknown field AutoCompleteAfterSpace in struct literal of type readline.Config
+
+# 2025-01-28 14:13:05.146423
++/code That didn't work, and the prompt's filepath doesnt update when changing directory
+
+# 2025-01-28 14:14:19.202558
++/code The prompt directory works now, but now I cannot navigate my input nor see the history with my arrow keys
+
+# 2025-01-28 14:14:51.107564
++/add cmds/cd.go
+
+# 2025-01-28 14:15:26.786361
++/code I added cd.go to the chat. I want you to add support for it to do cd ~/, etc. I also want tab autocompletion for this command for folders
+
+# 2025-01-28 14:17:02.079474
++/code When I do cd formalshe and tab, I get cd formalshecd and not cd formalshell
+
+# 2025-01-28 14:18:03.113730
++/code Same issue, and move the completions to a new file in the folder completions/
+
+# 2025-01-28 14:18:40.894800
++y
+
+# 2025-01-28 14:18:57.968635
++/run mkdir -p completions
+
+# 2025-01-28 14:18:57.968926
++/run mkdir -p completions
+
+# 2025-01-28 14:19:47.048906
++/code It would be cool if the cd command returned everything in a table
+
+# 2025-01-28 14:19:55.457361
++/code It would be cool if the ls command returned everything in a table
+
+# 2025-01-28 14:20:29.362207
++/code It would be cool if the ls command returned everything in a table. Do not use any external packages for it. The table must sort by type, name, size and file permissions
+
+# 2025-01-28 14:20:40.942988
++y
+
+# 2025-01-28 14:27:04.567874
++/add cmds/ls.go
+
+# 2025-01-28 14:27:06.921041
++/code It would be cool if the ls command returned everything in a table. Do not use any external packages for it. The table must sort by type, name, size and file permissions
