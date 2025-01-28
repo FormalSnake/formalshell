@@ -145,3 +145,70 @@
 
 # 2025-01-28 14:48:01.048792
 +N
+
+# 2025-01-28 16:16:50.484033
++/add main.go
+
+# 2025-01-28 16:17:25.032610
++/code Can you make it so that there is a function where I can add things like homebrew and nix to the path?
+
+# 2025-01-28 16:23:35.678423
++n
+
+# 2025-01-28 16:23:43.332865
++/undo
+
+# 2025-01-28 16:25:00.336639
++/code Make it so that there is a file I can make in the .config directory called .formalsh which is like .zshrc, a script that gets executed at the start of the shell
+
+# 2025-01-28 16:25:23.738639
++n
+
+# 2025-01-28 16:25:31.644734
++y
+
+# 2025-01-28 16:25:31.646951
++/run mkdir -p ~/.config && touch ~/.config/.formalsh
+
+# 2025-01-28 16:25:31.647007
++/run mkdir -p ~/.config && touch ~/.config/.formalsh
+
+# 2025-01-28 16:29:08.043123
++/code I put my configuration from zsh into my formalsh file, but the config runs terminal commands, sets aliases and adds to PATH. This is currently not supported
+
+# 2025-01-28 16:30:54.499537
++/add main.go
+
+# 2025-01-28 16:30:55.765100
++/code I put my configuration from zsh into my formalsh file, but the config runs termina
++l commands, sets aliases and adds to PATH. This is currently not supported
+
+# 2025-01-28 16:31:18.225902
++N
+
+# 2025-01-28 16:32:25.706576
++/code Maybe it's best to just execute the file as if it were a .sh script, because I still get things like "brew: command not found"
+
+# 2025-01-28 16:32:43.377223
++N
+
+# 2025-01-28 16:34:28.295328
++/code I added an echo that works: "Welcome to the formal shell!", but aliases, paths, etc. don't work. (this only happens when using the shell as a default shell) due to the PATH not working, commands like tmux or homebrew aren't found
+
+# 2025-01-28 16:35:01.678819
++D
+
+# 2025-01-28 16:35:40.372814
++/code Why is it reading my zshrc and stuff? I only want it to read .formalsh
+
+# 2025-01-28 16:36:58.721623
++/code Do not show the welcome message, and after removing the zshrc support my shell cannot find commands anymore. Maybe it has something to do with it
+
+# 2025-01-28 16:40:09.409470
++/code It all works perfectly now! One last thing, if I do ctrl+c I don't want it to exit the shell
+
+# 2025-01-28 16:43:33.112840
++/code One last thing, I want aliases and functions to work. For example I have an alias for vim that runs nvim, and i have a function called gpush that automatically creates a commit message and such.
+
+# 2025-01-28 16:43:52.141125
++N
