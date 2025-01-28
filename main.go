@@ -11,6 +11,9 @@ import (
 	"github.com/chzyer/readline"
 )
 
+// commandHistory stores unique commands that have been executed
+var commandHistory = make(map[string]bool)
+
 // displayPrompt generates the shell prompt, showing only the current folder name.
 func displayPrompt() string {
 	wd, err := os.Getwd()
@@ -28,6 +31,12 @@ func handleInput(input string) {
 	input = strings.TrimSpace(input)
 	if input == "" {
 		return
+	}
+
+	// Add command to history
+	parts := strings.Fields(input)
+	if len(parts) > 0 {
+		commandHistory[parts[0]] = true
 	}
 
 	// Split by `&&` for command chaining
@@ -127,8 +136,26 @@ func executeCommand(command string, args []string) {
 	}
 }
 
+// createCompleter returns a readline.PrefixCompleter based on command history
+func createCompleter() *readline.PrefixCompleter {
+	// Convert map to slice for completer
+	var completions []readline.PrefixCompleterInterface
+	for cmd := range commandHistory {
+		completions = append(completions, readline.PcItem(cmd))
+	}
+	return readline.NewPrefixCompleter(completions...)
+}
+
 func main() {
-	rl, err := readline.New(displayPrompt())
+	// Configure readline
+	config := &readline.Config{
+		Prompt:          displayPrompt(),
+		AutoComplete:    createCompleter(),
+		InterruptPrompt: "^C",
+		EOFPrompt:      "exit",
+	}
+
+	rl, err := readline.NewEx(config)
 	if err != nil {
 		panic(err)
 	}
@@ -140,6 +167,9 @@ func main() {
 			break
 		}
 		handleInput(line)
+		
+		// Update completer with new history
+		rl.Config.AutoComplete = createCompleter()
 	}
 
 	fmt.Println("Shell exited.")
