@@ -35,14 +35,21 @@ func loadHistory(rl *readline.Instance) error {
 		return nil
 	}
 
-	f, err := os.OpenFile(historyFile, os.O_RDONLY|os.O_CREATE, 0666)
+	data, err := os.ReadFile(historyFile)
 	if err != nil {
+		if os.IsNotExist(err) {
+			return nil
+		}
 		return err
 	}
-	defer f.Close()
 
-	_, err = rl.ReadHistory(f)
-	return err
+	lines := strings.Split(string(data), "\n")
+	for _, line := range lines {
+		if line = strings.TrimSpace(line); line != "" {
+			rl.SaveHistory(line)
+		}
+	}
+	return nil
 }
 
 func saveHistory(rl *readline.Instance) error {
@@ -50,14 +57,15 @@ func saveHistory(rl *readline.Instance) error {
 		return nil
 	}
 
-	f, err := os.OpenFile(historyFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
-	if err != nil {
-		return err
+	history := rl.GetHistory()
+	var lines []string
+	for _, item := range history.Deque {
+		if str, ok := item.(string); ok {
+			lines = append(lines, str)
+		}
 	}
-	defer f.Close()
 
-	_, err = rl.WriteHistory(f)
-	return err
+	return os.WriteFile(historyFile, []byte(strings.Join(lines, "\n")+"\n"), 0666)
 }
 
 // displayPrompt generates the shell prompt, showing only the current folder name.
