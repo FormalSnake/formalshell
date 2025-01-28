@@ -195,7 +195,7 @@ func handlePipes(input string) {
 // executeCommand runs an external command.
 func executeCommand(command string, args []string) {
 	// Create a shell script that will execute the command
-	script := fmt.Sprintf(". ~/.config/.formalsh\n%s %s", command, strings.Join(args, " "))
+	script := fmt.Sprintf(". ~/.config/formalshell/config\n%s %s", command, strings.Join(args, " "))
 	
 	tmpFile, err := os.CreateTemp("", "formalsh_cmd_*.sh")
 	if err != nil {
@@ -266,7 +266,7 @@ func loadConfig() {
 	}
 
 	// Then load our specific config
-	configPath := filepath.Join(homeDir, ".config", ".formalsh")
+	configPath := filepath.Join(homeDir, ".config", "formalshell", "config")
 	if _, err := os.Stat(configPath); err == nil {
 		cmd := exec.Command("/bin/sh", configPath)
 		cmd.Stdout = os.Stdout
