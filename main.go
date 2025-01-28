@@ -164,13 +164,15 @@ func executeCommand(command string, args []string) {
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
 
-	if err := cmd.Run(); err != nil {
+	err = cmd.Run()
+	if err != nil {
 		if exitErr, ok := err.(*exec.ExitError); ok {
-			// Preserve the exit code but don't show "command not found"
-			os.Exit(exitErr.ExitCode())
+			// Just print the error but don't exit the shell
+			fmt.Printf("Command exited with status %d\n", exitErr.ExitCode())
 		} else {
 			fmt.Printf("%s: command not found\n", command)
 		}
+		return
 	}
 }
 
