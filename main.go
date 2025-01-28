@@ -7,24 +7,8 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-)
 
-// ANSI color codes
-const (
-	reset   = "\033[0m"
-	blue    = "\033[34m" // Directories
-	cyan    = "\033[36m" // Executable files
-	green   = "\033[32m" // Regular files
-	yellow  = "\033[33m" // Symlinks
-	magenta = "\033[35m" // Special files
-)
-
-// Nerd Fonts icons
-const (
-	iconFolder     = "" // Nerd Font icon for folders
-	iconFile       = "󰈙" // Nerd Font icon for files
-	iconExecutable = "" // Nerd Font icon for executables
-	iconSymlink    = "" // Nerd Font icon for symlinks
+	"formalshell/cmds"
 )
 
 // displayPrompt generates the shell prompt, showing only the current folder name.
@@ -33,6 +17,9 @@ func displayPrompt() string {
 	if err != nil {
 		wd = "unknown"
 	}
+
+	blue := "\033[34m"
+	reset := "\033[0m"
 	return fmt.Sprintf("󰅟  %s%s%s > ", blue, filepath.Base(wd), reset)
 }
 
@@ -73,10 +60,10 @@ func handleCommand(input string) {
 		fmt.Println("Goodbye!")
 		os.Exit(0)
 	case "cd":
-		handleCD(args)
+		cmds.HandleCD(args)
 		return
 	case "ls":
-		customLS()
+		cmds.CustomLS()
 		return
 	}
 

@@ -1,4 +1,4 @@
-package main
+package cmds
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 )
 
 // handleCD implements the 'cd' command to change directories.
-func handleCD(args []string) {
+func HandleCD(args []string) {
 	if len(args) < 1 {
 		fmt.Println("cd: missing argument")
 		return
