@@ -23,7 +23,7 @@ git clone https://github.com/formalsnake/formalshell.git
 
 ```bash
 cd formalshell
-go build -o formalshell
+go build formalshell
 ```
 
 3. Run the executable:
