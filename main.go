@@ -89,31 +89,9 @@ func handleInput(input string, rl *readline.Instance) {
 		return
 	}
 
-	// Save the full original input to history before any processing
+	// Save the raw input to history immediately
 	if input = strings.TrimSpace(input); input != "" {
-		// Save the complete command including chains and pipes
 		commandHistory[input] = true
-		
-		// Also save individual commands from chains
-		commands := strings.Split(input, "&&")
-		for _, cmd := range commands {
-			cmd = strings.TrimSpace(cmd)
-			if cmd != "" {
-				commandHistory[cmd] = true
-				
-				// Handle piped commands individually too
-				if strings.Contains(cmd, "|") {
-					pipedCmds := strings.Split(cmd, "|")
-					for _, pipedCmd := range pipedCmds {
-						if pipedCmd = strings.TrimSpace(pipedCmd); pipedCmd != "" {
-							commandHistory[pipedCmd] = true
-						}
-					}
-				}
-			}
-		}
-		
-		// Save history after processing
 		if err := saveHistory(rl); err != nil {
 			fmt.Printf("Error saving history: %v\n", err)
 		}
@@ -159,21 +137,12 @@ func handleCommand(input string) {
 		fmt.Println("Goodbye!")
 		os.Exit(0)
 	case "cd":
-		// Save the full cd command before executing
-		if len(args) > 0 {
-			fullCmd := fmt.Sprintf("cd %s", strings.Join(args, " "))
-			commandHistory[fullCmd] = true
-		}
 		cmds.HandleCD(args)
 		return
 	case "ls":
 		cmds.CustomLS()
 		return
 	}
-
-	// Save the full command before executing
-	fullCmd := fmt.Sprintf("%s %s", command, strings.Join(args, " "))
-	commandHistory[strings.TrimSpace(fullCmd)] = true
 
 	// Execute external commands
 	executeCommand(command, args)
