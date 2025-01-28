@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"os/exec"
@@ -9,6 +8,7 @@ import (
 	"strings"
 
 	"formalshell/cmds"
+	"github.com/chzyer/readline"
 )
 
 // displayPrompt generates the shell prompt, showing only the current folder name.
@@ -128,19 +128,18 @@ func executeCommand(command string, args []string) {
 }
 
 func main() {
-	reader := bufio.NewScanner(os.Stdin)
+	rl, err := readline.New(displayPrompt())
+	if err != nil {
+		panic(err)
+	}
+	defer rl.Close()
 
 	for {
-		// Display prompt
-		fmt.Print(displayPrompt())
-
-		// Read input
-		if !reader.Scan() {
-			break // Exit on EOF
+		line, err := rl.Readline()
+		if err != nil { // io.EOF, readline.ErrInterrupt
+			break
 		}
-
-		input := reader.Text()
-		handleInput(input) // Process the input
+		handleInput(line)
 	}
 
 	fmt.Println("Shell exited.")
