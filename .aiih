@@ -118,3 +118,30 @@
 
 # 2025-01-28 14:27:06.921041
 +/code It would be cool if the ls command returned everything in a table. Do not use any external packages for it. The table must sort by type, name, size and file permissions
+
+# 2025-01-28 14:46:23.681345
++/add main.go
+
+# 2025-01-28 14:46:26.377903
++/add cmds/cd.go
+
+# 2025-01-28 14:46:38.057671
++/ask Do you know what zoxide is?
+
+# 2025-01-28 14:47:12.662076
++/code Yes, please add zoxide-like functionality to my cd command
+
+# 2025-01-28 14:47:56.253733
++/run cd proj  # might jump to ~/projects
+
+# 2025-01-28 14:47:56.254123
++/run cd proj  # might jump to ~/projects
+
+# 2025-01-28 14:47:57.734556
++/run cd doc   # might jump to ~/Documents
+
+# 2025-01-28 14:47:57.734691
++/run cd doc   # might jump to ~/Documents
+
+# 2025-01-28 14:48:01.048792
++N
