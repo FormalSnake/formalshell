@@ -158,74 +158,20 @@ func loadConfig() {
 		return
 	}
 
-	// Create a script that sources profile files and our config
-	script := `
-		# Source profile files
-		[ -f /etc/profile ] && . /etc/profile
-		[ -f ~/.profile ] && . ~/.profile
-		[ -f ~/.zshrc ] && . ~/.zshrc
-		[ -f ~/.bashrc ] && . ~/.bashrc
-
-		# Print environment for capture
-		env > "$TMPDIR/formalsh_env"
-	`
-
-	// Write script to temporary file
-	tmpFile, err := os.CreateTemp("", "formalsh_profile_*.sh")
-	if err != nil {
-		fmt.Printf("Error creating temp file: %v\n", err)
-		return
-	}
-	defer os.Remove(tmpFile.Name())
-
-	if _, err := tmpFile.WriteString(script); err != nil {
-		fmt.Printf("Error writing temp file: %v\n", err)
-		return
-	}
-	tmpFile.Close()
-
-	// Execute the script
-	cmd := exec.Command("/bin/sh", tmpFile.Name())
-	cmd.Stdout = os.Stdout
-	cmd.Stderr = os.Stderr
-	if err := cmd.Run(); err != nil {
-		fmt.Printf("Error loading profiles: %v\n", err)
-		return
-	}
-
-	// Read captured environment
-	envFile := os.Getenv("TMPDIR") + "/formalsh_env"
-	envData, err := os.ReadFile(envFile)
-	if err != nil {
-		fmt.Printf("Error reading environment: %v\n", err)
-		return
-	}
-	os.Remove(envFile)
-
-	// Parse and set environment variables
-	envVars := strings.Split(string(envData), "\n")
-	for _, line := range envVars {
-		if line == "" {
-			continue
-		}
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) == 2 {
-			os.Setenv(parts[0], parts[1])
-			if parts[0] == "PATH" {
-				customPath = parts[1]
-			}
-		}
-	}
-
-	// Now load our specific config file
 	configPath := filepath.Join(homeDir, ".config", ".formalsh")
 	if _, err := os.Stat(configPath); err == nil {
 		cmd := exec.Command("/bin/sh", configPath)
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
+		cmd.Env = os.Environ() // Pass current environment
 		if err := cmd.Run(); err != nil {
 			fmt.Printf("Error loading formalsh config: %v\n", err)
 		}
+	}
+
+	// Update PATH from environment after config execution
+	if newPath := os.Getenv("PATH"); newPath != "" {
+		customPath = newPath
 	}
 
 	fmt.Println("Welcome to the formal shell!")
