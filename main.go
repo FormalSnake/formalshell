@@ -136,13 +136,53 @@ func executeCommand(command string, args []string) {
 	}
 }
 
-// createCompleter returns a readline.PrefixCompleter based on command history
+// getDirCompletions returns a list of subdirectories for the given path
+func getDirCompletions(path string) []string {
+	var completions []string
+	
+	// Handle home directory in completion
+	if strings.HasPrefix(path, "~/") {
+		if homeDir, err := os.UserHomeDir(); err == nil {
+			path = filepath.Join(homeDir, path[2:])
+		}
+	}
+	
+	// Get the directory to search in and the prefix to match
+	searchDir := filepath.Dir(path)
+	prefix := filepath.Base(path)
+	
+	// List all directories
+	if entries, err := os.ReadDir(searchDir); err == nil {
+		for _, entry := range entries {
+			if entry.IsDir() && strings.HasPrefix(entry.Name(), prefix) {
+				completions = append(completions, entry.Name()+"/")
+			}
+		}
+	}
+	
+	return completions
+}
+
+// createCompleter returns a readline.PrefixCompleter based on command history and directory completion
 func createCompleter() *readline.PrefixCompleter {
-	// Convert map to slice for completer
 	var completions []readline.PrefixCompleterInterface
+	
+	// Add command history completions
 	for cmd := range commandHistory {
 		completions = append(completions, readline.PcItem(cmd))
 	}
+	
+	// Add cd command with directory completion
+	cdCompleter := readline.PcItem("cd",
+		readline.PcItemDynamic(func(path string) []string {
+			if path == "" {
+				path = "."
+			}
+			return getDirCompletions(path)
+		}))
+	
+	completions = append(completions, cdCompleter)
+	
 	return readline.NewPrefixCompleter(completions...)
 }
 

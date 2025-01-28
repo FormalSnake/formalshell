@@ -4,17 +4,38 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
-// handleCD implements the 'cd' command to change directories.
+// HandleCD implements the 'cd' command to change directories.
 func HandleCD(args []string) {
 	if len(args) < 1 {
-		fmt.Println("cd: missing argument")
+		// Change to home directory if no args
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			fmt.Println("cd:", err)
+			return
+		}
+		if err := os.Chdir(homeDir); err != nil {
+			fmt.Println("cd:", err)
+		}
 		return
 	}
 
+	path := args[0]
+
+	// Handle home directory expansion
+	if strings.HasPrefix(path, "~/") {
+		homeDir, err := os.UserHomeDir()
+		if err != nil {
+			fmt.Println("cd:", err)
+			return
+		}
+		path = filepath.Join(homeDir, path[2:])
+	}
+
 	// Resolve relative paths
-	path, err := filepath.Abs(args[0])
+	path, err := filepath.Abs(path)
 	if err != nil {
 		fmt.Println("cd:", err)
 		return
