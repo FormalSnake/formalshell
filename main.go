@@ -17,7 +17,48 @@ var (
 	commandHistory = make(map[string]bool)
 	aliases       = make(map[string]string)
 	customPath    = os.Getenv("PATH")
+	historyFile   string
 )
+
+func init() {
+	homeDir, err := os.UserHomeDir()
+	if err == nil {
+		historyDir := filepath.Join(homeDir, ".config", "formalshell")
+		if err := os.MkdirAll(historyDir, 0755); err == nil {
+			historyFile = filepath.Join(historyDir, "history")
+		}
+	}
+}
+
+func loadHistory(rl *readline.Instance) error {
+	if historyFile == "" {
+		return nil
+	}
+
+	f, err := os.OpenFile(historyFile, os.O_RDONLY|os.O_CREATE, 0666)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = rl.ReadHistory(f)
+	return err
+}
+
+func saveHistory(rl *readline.Instance) error {
+	if historyFile == "" {
+		return nil
+	}
+
+	f, err := os.OpenFile(historyFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	_, err = rl.WriteHistory(f)
+	return err
+}
 
 // displayPrompt generates the shell prompt, showing only the current folder name.
 func displayPrompt() string {
@@ -243,6 +284,12 @@ func main() {
 		panic(err)
 	}
 	defer rl.Close()
+
+	// Load command history
+	if err := loadHistory(rl); err != nil {
+		fmt.Printf("Error loading history: %v\n", err)
+	}
+	defer saveHistory(rl)
 
 	for {
 		rl.SetPrompt(displayPrompt())
