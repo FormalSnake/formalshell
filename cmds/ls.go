@@ -88,27 +88,29 @@ func CustomLS(args ...string) {
 			continue
 		}
 
-		var fileType, icon, color string
-		if entry.IsDir() {
+		var fileType, color string
+		mode := info.Mode()
+		isSymlink := mode&os.ModeSymlink != 0
+		isExecutable := mode&0111 != 0
+		isDir := entry.IsDir()
+
+		// Get appropriate icon
+		icon := GetFileIcon(info.Name(), isDir, isExecutable, isSymlink)
+
+		// Set type and color
+		switch {
+		case isDir:
 			fileType = "Directory"
-			icon = iconFolder
 			color = blue
-		} else {
-			mode := info.Mode()
-			switch {
-			case mode&os.ModeSymlink != 0:
-				fileType = "Symlink"
-				icon = iconSymlink
-				color = yellow
-			case mode&0111 != 0:
-				fileType = "Executable"
-				icon = iconExecutable
-				color = cyan
-			default:
-				fileType = "File"
-				icon = iconFile
-				color = green
-			}
+		case isSymlink:
+			fileType = "Symlink"
+			color = yellow
+		case isExecutable:
+			fileType = "Executable"
+			color = cyan
+		default:
+			fileType = "File"
+			color = green
 		}
 
 		files = append(files, fileInfo{
