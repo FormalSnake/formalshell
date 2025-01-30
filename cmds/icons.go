@@ -52,24 +52,24 @@ var FileIcons = map[string]string{
 	".txt":          "󰈙",   // Text files
 
 	// Data & Databases
-	".sql":          "",   // SQL files
-	".db":           "",   // Database files
-	".csv":          "",   // CSV files
-	".xlsx":         "",   // Excel files
-	".doc":          "",   // Word files
-	".pdf":          "",   // PDF files
+	".sql":          "󰆼",   // SQL files
+	".db":           "󰆼",   // Database files
+	".csv":          "󰈛",   // CSV files
+	".xlsx":         "󰈛",   // Excel files
+	".doc":          "󰈬",   // Word files
+	".pdf":          "󰈦",   // PDF files
 
 	// Media
-	".mp3":          "",   // Audio files
-	".wav":          "",   // Wave files
-	".mp4":          "",   // Video files
-	".mov":          "",   // Movie files
-	".png":          "",   // PNG files
-	".jpg":          "",   // JPG files
-	".jpeg":         "",   // JPEG files
-	".gif":          "",   // GIF files
-	".svg":          "",   // SVG files
-	".ico":          "",   // Icon files
+	".mp3":          "󰎆",   // Audio files
+	".wav":          "󰎆",   // Wave files
+	".mp4":          "󰕧",   // Video files
+	".mov":          "󰕧",   // Movie files
+	".png":          "󰋩",   // PNG files
+	".jpg":          "󰋩",   // JPG files
+	".jpeg":         "󰋩",   // JPEG files
+	".gif":          "󰋩",   // GIF files
+	".svg":          "󰜡",   // SVG files
+	".ico":          "󰀲",   // Icon files
 
 	// System
 	"executable":    "󰆍",   // Executable files
