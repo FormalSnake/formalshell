@@ -80,7 +80,7 @@ var FileIcons = map[string]string{
 	".zsh":          "󰆍",   // Zsh scripts
 	".vim":          "󰕷",   // Vim files
 	".nvim":         "󰕷",   // Neovim files
-	".gitignore":    "󰊢",   // Git ignore files
+	".gitignore":    "󰈉",   // Git ignore files
 	".dockerignore": "󰡨",   // Docker ignore files
 	"dockerfile":    "󰡨",   // Dockerfiles
 	".env":          "󰒓",   // Environment files
@@ -103,7 +103,7 @@ func GetFileIcon(name string, isDir bool, isExecutable bool, isSymlink bool) str
 		// Special folder cases
 		switch name {
 		case ".git":
-			return FileIcons["folder_git"]
+			return "󰊢"  // Git folder icon
 		case ".github":
 			return FileIcons["folder_github"]
 		case "config", ".config":
