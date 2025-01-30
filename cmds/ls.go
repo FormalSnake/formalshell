@@ -182,7 +182,7 @@ func CustomLS(args ...string) {
 	// Print files
 	for _, f := range files {
 		sizeStr := formatSize(f.size)
-		fmt.Printf("%s│%s %s%s %s%-*s%s %s│%s %*s %s│%s %-*s %s│%s %-*s %s│%s\n",
+		fmt.Printf("%s│%s %s%s %s%-*s%s %s│%s %-*s %s│%s %-*s %s│%s %-*s %s│%s\n",
 			gray, reset,
 			f.color, f.icon, reset,
 			maxName, f.name,
