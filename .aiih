@@ -452,3 +452,22 @@
 +/code # formalshell/completions
 +completions/directory.go:5:2: "path/filepath" imported and not used
 +Command exited with status 1
+
+# 2025-01-30 18:10:28.555069
++/code It works sometimes. The one time it does work the functionality is exactly what i want
+
+# 2025-01-30 18:11:06.319121
++/code # formalshell/completions
++completions/directory.go:11:2: os redeclared in this block
++        completions/directory.go:4:2: other declaration of os
++completions/directory.go:11:2: "os" imported and not used
++completions/directory.go:13:2: strings redeclared in this block
++        completions/directory.go:5:2: other declaration of strings
++completions/directory.go:13:2: "strings" imported and not used
++completions/directory.go:15:2: readline redeclared in this block
++        completions/directory.go:7:2: other declaration of readline
++completions/directory.go:15:2: "github.com/chzyer/readline" imported and not used
++Command exited with status 1
+
+# 2025-01-30 18:11:53.167840
++/code after the first time it stops working and just prints cd when hitting tab when already having typed cd
