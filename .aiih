@@ -320,3 +320,106 @@
 
 # 2025-01-28 17:45:08.066452
 +n
+
+# 2025-01-30 17:51:23.503407
++/add main.go
+
+# 2025-01-30 17:51:55.462702
++/code Can you clean up the code and organise it better?
+
+# 2025-01-30 17:52:59.361421
++N
+
+# 2025-01-30 17:53:18.673883
++/run go mod tidy
+
+# 2025-01-30 17:53:18.674879
++/run go mod tidy
+
+# 2025-01-30 17:53:38.022252
++/add main.go
+
+# 2025-01-30 17:53:41.529271
++/add shell.go
+
+# 2025-01-30 17:53:44.498713
++N
+
+# 2025-01-30 17:53:46.759038
++/add shell/shell.go
+
+# 2025-01-30 17:53:49.811209
++/add history/history.go
+
+# 2025-01-30 17:53:53.289587
++/code # formalshell/shell
++shell/shell.go:16:2: undefined: signal
++shell/shell.go:17:8: undefined: signal
++Command exited with status 1
+
+# 2025-01-30 17:54:09.047800
++/code # command-line-arguments
++./main.go:105:15: undefined: exec
++./main.go:115:10: undefined: exec
++./main.go:150:2: undefined: signal
++./main.go:150:25: undefined: syscall
++./main.go:151:8: undefined: signal
++./main.go:170:9: undefined: exec
++./main.go:187:24: undefined: syscall
++./main.go:195:27: undefined: exec
++./main.go:197:33: undefined: syscall
++./main.go:222:11: undefined: exec
++./main.go:222:11: too many errors
++Command exited with status 1
+
+# 2025-01-30 17:54:41.764259
++/add cmds/ls.go
+
+# 2025-01-30 17:55:11.381386
++/code Can you in a separate file make an icon map and add more icons from nerd fonts in it for more filetypes?
+
+# 2025-01-30 17:55:41.966734
++N
+
+# 2025-01-30 17:56:17.729081
++/code # formalshell/cmds
++cmds/icons.go:127:15: undefined: strings
++cmds/icons.go:138:9: undefined: strings
++cmds/icons.go:138:25: undefined: filepath
++Command exited with status 1
+
+# 2025-01-30 17:56:44.092791
++/code Can you please fill in the icons? I do not want empty strings
+
+# 2025-01-30 17:58:00.630277
++/add cmds/icons.go
+
+# 2025-01-30 17:58:03.256369
++/add cmds/ls.go
+
+# 2025-01-30 17:58:11.158950
++/code Can you complete the icons in the icon map?
+
+# 2025-01-30 17:58:25.007353
++N
+
+# 2025-01-30 17:59:16.188947
++/code Can you add an icon for .gitignore aswell? and the .git folder must be the git folder icon not just the git logo.
+
+# 2025-01-30 17:59:18.319201
++N
+
+# 2025-01-30 18:00:18.492448
++/code The .gitignore icon doesn't appear to work
+
+# 2025-01-30 18:00:30.624048
++N
+
+# 2025-01-30 18:01:30.551896
++/code Can you make the table header text be yellow and the table outlines be more grayish
+
+# 2025-01-30 18:01:49.668081
++D
+
+# 2025-01-30 18:02:22.640061
++/code The completely vertical table borders aren't gray. The horizontal and corners are tho
