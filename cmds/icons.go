@@ -1,5 +1,10 @@
 package cmds
 
+import (
+	"path/filepath"
+	"strings"
+)
+
 // FileIcons maps file extensions and types to Nerd Font icons
 var FileIcons = map[string]string{
 	// Folders
