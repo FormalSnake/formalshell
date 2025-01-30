@@ -8,48 +8,48 @@ import (
 // FileIcons maps file extensions and types to Nerd Font icons
 var FileIcons = map[string]string{
 	// Folders
-	"folder":         "",  // Default folder
-	"folder_open":    "",  // Open folder
-	"folder_config":  "",  // Config folder
-	"folder_git":     "",  // Git folder
-	"folder_github":  "",  // GitHub folder
-	"folder_home":    "󱂵",  // Home folder
-	"folder_docs":    "",  // Documents folder
-	"folder_images":  "",  // Images folder
-	"folder_music":   "",  // Music folder
-	"folder_videos":  "",  // Videos folder
-	"folder_downloads": "", // Downloads folder
+	"folder":          "󰉋",  // Default folder
+	"folder_open":     "󰝰",  // Open folder
+	"folder_config":   "󱁿",  // Config folder
+	"folder_git":      "󰊢",  // Git folder
+	"folder_github":   "󰊤",  // GitHub folder
+	"folder_home":     "󱂵",  // Home folder
+	"folder_docs":     "󰈙",  // Documents folder
+	"folder_images":   "󰉏",  // Images folder
+	"folder_music":    "󱍙",  // Music folder
+	"folder_videos":   "󰕧",  // Videos folder
+	"folder_downloads": "󰇚", // Downloads folder
 
 	// Development
-	".go":           "",   // Go files
-	".py":           "",   // Python files
-	".js":           "",   // JavaScript files
-	".ts":           "",   // TypeScript files
-	".jsx":          "",   // React files
-	".tsx":          "",   // React TypeScript files
+	".go":           "󰟓",   // Go files
+	".py":           "󰌠",   // Python files
+	".js":           "󰌞",   // JavaScript files
+	".ts":           "󰛦",   // TypeScript files
+	".jsx":          "󰜈",   // React files
+	".tsx":          "󰜈",   // React TypeScript files
 	".vue":          "󰡄",   // Vue files
-	".rs":           "",   // Rust files
-	".cpp":          "",   // C++ files
-	".c":            "",   // C files
-	".h":            "",   // Header files
-	".java":         "",   // Java files
-	".kt":           "",   // Kotlin files
-	".rb":           "",   // Ruby files
-	".php":          "",   // PHP files
-	".scala":        "",   // Scala files
-	".swift":        "",   // Swift files
+	".rs":           "󱘗",   // Rust files
+	".cpp":          "󰙲",   // C++ files
+	".c":            "󰙱",   // C files
+	".h":            "󰙲",   // Header files
+	".java":         "󰬷",   // Java files
+	".kt":           "󱈙",   // Kotlin files
+	".rb":           "󰴭",   // Ruby files
+	".php":          "󰌟",   // PHP files
+	".scala":        "󰘜",   // Scala files
+	".swift":        "󰛥",   // Swift files
 
 	// Web
-	".html":         "",   // HTML files
-	".css":          "",   // CSS files
-	".scss":         "",   // SCSS files
-	".sass":         "",   // Sass files
-	".json":         "",   // JSON files
-	".xml":          "",   // XML files
-	".yaml":         "",   // YAML files
-	".yml":          "",   // YML files
-	".md":           "",   // Markdown files
-	".txt":          "",   // Text files
+	".html":         "󰌝",   // HTML files
+	".css":          "󰌜",   // CSS files
+	".scss":         "󰌜",   // SCSS files
+	".sass":         "󰌜",   // Sass files
+	".json":         "󰘦",   // JSON files
+	".xml":          "󰗀",   // XML files
+	".yaml":         "󰈙",   // YAML files
+	".yml":          "󰈙",   // YML files
+	".md":           "󰍔",   // Markdown files
+	".txt":          "󰈙",   // Text files
 
 	// Data & Databases
 	".sql":          "",   // SQL files
@@ -72,25 +72,25 @@ var FileIcons = map[string]string{
 	".ico":          "",   // Icon files
 
 	// System
-	"executable":    "",   // Executable files
-	"symlink":       "",   // Symbolic links
+	"executable":    "󰆍",   // Executable files
+	"symlink":       "󰉒",   // Symbolic links
 	"file":          "󰈙",   // Default file
-	".sh":           "",   // Shell scripts
-	".bash":         "",   // Bash scripts
-	".zsh":          "",   // Zsh scripts
-	".vim":          "",   // Vim files
-	".nvim":         "",   // Neovim files
-	".gitignore":    "",   // Git ignore files
-	".dockerignore": "",   // Docker ignore files
-	"dockerfile":    "",   // Dockerfiles
-	".env":          "",   // Environment files
+	".sh":           "󰆍",   // Shell scripts
+	".bash":         "󰆍",   // Bash scripts
+	".zsh":          "󰆍",   // Zsh scripts
+	".vim":          "󰕷",   // Vim files
+	".nvim":         "󰕷",   // Neovim files
+	".gitignore":    "󰊢",   // Git ignore files
+	".dockerignore": "󰡨",   // Docker ignore files
+	"dockerfile":    "󰡨",   // Dockerfiles
+	".env":          "󰒓",   // Environment files
 	".log":          "󰌱",   // Log files
-	".lock":         "",   // Lock files
-	".zip":          "",   // Zip files
-	".tar":          "",   // Tar files
-	".gz":           "",   // Gzip files
-	".7z":           "",   // 7zip files
-	".iso":          "",   // ISO files
+	".lock":         "󰌾",   // Lock files
+	".zip":          "󰗄",   // Zip files
+	".tar":          "󰗄",   // Tar files
+	".gz":           "󰗄",   // Gzip files
+	".7z":           "󰗄",   // 7zip files
+	".iso":          "󰗮",   // ISO files
 }
 
 // GetFileIcon returns the appropriate icon for a file based on its name and type
