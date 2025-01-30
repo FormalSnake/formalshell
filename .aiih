@@ -471,3 +471,6 @@
 
 # 2025-01-30 18:11:53.167840
 +/code after the first time it stops working and just prints cd when hitting tab when already having typed cd
+
+# 2025-01-30 18:13:17.089167
++/code OMG PERFECT!!! It is very reliable now! One last thing, when doing cd ~/ or ../, etc. I want tab to autocomplete relative to that
