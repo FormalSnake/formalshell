@@ -21,13 +21,35 @@ func getDirCompletions(prefix string) []string {
 		}
 	}
 
-	// If prefix contains a path, split it into directory and prefix
+	// Handle special paths
 	if prefix != "" {
-		searchDir = filepath.Dir(prefix)
-		if searchDir == "." {
-			searchPrefix = prefix
-		} else {
-			searchPrefix = filepath.Base(prefix)
+		switch {
+		case strings.HasPrefix(prefix, "~/"):
+			// Home directory
+			if homeDir, err := os.UserHomeDir(); err == nil {
+				searchDir = filepath.Join(homeDir, filepath.Dir(prefix[2:]))
+				searchPrefix = filepath.Base(prefix)
+			}
+		case strings.HasPrefix(prefix, "../"):
+			// Parent directory
+			if currentDir, err := os.Getwd(); err == nil {
+				searchDir = filepath.Join(currentDir, filepath.Dir(prefix))
+				searchPrefix = filepath.Base(prefix)
+			}
+		case strings.HasPrefix(prefix, "./"):
+			// Current directory
+			if currentDir, err := os.Getwd(); err == nil {
+				searchDir = filepath.Join(currentDir, filepath.Dir(prefix[2:]))
+				searchPrefix = filepath.Base(prefix)
+			}
+		default:
+			// Regular path
+			searchDir = filepath.Dir(prefix)
+			if searchDir == "." {
+				searchPrefix = prefix
+			} else {
+				searchPrefix = filepath.Base(prefix)
+			}
 		}
 	}
 
