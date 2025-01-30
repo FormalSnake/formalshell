@@ -435,3 +435,20 @@
 
 # 2025-01-30 18:05:03.986940
 +/clear
+
+# 2025-01-30 18:06:14.728239
++/code Can you make it so that the cd command has proper tabbing? When I hit tab I want it to try to autocomplete to folders in the current directory
+
+# 2025-01-30 18:06:17.564017
++/add main.go
+
+# 2025-01-30 18:06:19.753978
++/code Can you make it so that the cd command has proper tabbing? When I hit tab I want it to try to autocomplete to folders in the current directory
+
+# 2025-01-30 18:07:20.162151
++/code When I hit tab it just prints cd again
+
+# 2025-01-30 18:07:54.020377
++/code # formalshell/completions
++completions/directory.go:5:2: "path/filepath" imported and not used
++Command exited with status 1
