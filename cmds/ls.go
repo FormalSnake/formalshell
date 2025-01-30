@@ -39,6 +39,7 @@ const (
 	green   = "\033[32m" // Regular files
 	yellow  = "\033[33m" // Symlinks
 	magenta = "\033[35m" // Special files
+	gray    = "\033[38;5;242m" // Table borders
 )
 
 // Nerd Fonts icons
@@ -151,23 +152,32 @@ func CustomLS(args ...string) {
 	}
 
 	// Print header
-	fmt.Printf("╭%s┬%s┬%s┬%s╮\n",
+	fmt.Printf("%s╭%s┬%s┬%s┬%s╮%s\n",
+		gray,
 		strings.Repeat("─", maxName+4),
 		strings.Repeat("─", maxSize+2),
 		strings.Repeat("─", maxType+2),
-		strings.Repeat("─", maxPerm+2))
+		strings.Repeat("─", maxPerm+2),
+		reset)
 
-	fmt.Printf("│ %-*s │ %-*s │ %-*s │ %-*s │\n",
-		maxName+2, "NAME",
-		maxSize, "SIZE",
-		maxType, "TYPE",
-		maxPerm, "PERMISSIONS")
+	fmt.Printf("%s│%s %s%-*s%s %s│%s %s%-*s%s %s│%s %s%-*s%s %s│%s %s%-*s%s %s│%s\n",
+		gray, reset,
+		yellow, maxName+2, "NAME", reset,
+		gray, reset,
+		yellow, maxSize, "SIZE", reset,
+		gray, reset,
+		yellow, maxType, "TYPE", reset,
+		gray, reset,
+		yellow, maxPerm, "PERMISSIONS", reset,
+		gray, reset)
 
-	fmt.Printf("├%s┼%s┼%s┼%s┤\n",
+	fmt.Printf("%s├%s┼%s┼%s┼%s┤%s\n",
+		gray,
 		strings.Repeat("─", maxName+4),
 		strings.Repeat("─", maxSize+2),
 		strings.Repeat("─", maxType+2),
-		strings.Repeat("─", maxPerm+2))
+		strings.Repeat("─", maxPerm+2),
+		reset)
 
 	// Print files
 	for _, f := range files {
@@ -182,9 +192,11 @@ func CustomLS(args ...string) {
 	}
 
 	// Print footer
-	fmt.Printf("╰%s┴%s┴%s┴%s╯\n",
+	fmt.Printf("%s╰%s┴%s┴%s┴%s╯%s\n",
+		gray,
 		strings.Repeat("─", maxName+4),
 		strings.Repeat("─", maxSize+2),
 		strings.Repeat("─", maxType+2),
-		strings.Repeat("─", maxPerm+2))
+		strings.Repeat("─", maxPerm+2),
+		reset)
 }
