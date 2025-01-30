@@ -2,13 +2,6 @@ package completions
 
 import (
 	"os"
-	"strings"
-
-	"github.com/chzyer/readline"
-)
-
-import (
-	"os"
 	"path/filepath"
 	"strings"
 
