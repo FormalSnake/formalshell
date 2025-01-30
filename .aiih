@@ -423,3 +423,15 @@
 
 # 2025-01-30 18:02:22.640061
 +/code The completely vertical table borders aren't gray. The horizontal and corners are tho
+
+# 2025-01-30 18:03:36.910899
++/code Sometimes a line in the table misaligns and then the table border is one space off from the rest
+
+# 2025-01-30 18:04:11.178489
++/code It doesn't have to do with the colors
+
+# 2025-01-30 18:04:52.901689
++/undo
+
+# 2025-01-30 18:05:03.986940
++/clear
