@@ -4,74 +4,22 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"os/exec"
-	"os/signal"
-	"syscall"
 	"path/filepath"
 	"strings"
 
 	"formalshell/cmds"
 	"formalshell/completions"
+	"formalshell/history"
+	"formalshell/shell"
 	"github.com/chzyer/readline"
 )
 
 // Global state
 var (
-	commandHistory = make(map[string]bool)
-	aliases       = make(map[string]string)
-	customPath    = os.Getenv("PATH")
-	historyFile   string
+	aliases    = make(map[string]string)
+	customPath string
 )
 
-func init() {
-	homeDir, err := os.UserHomeDir()
-	if err == nil {
-		historyDir := filepath.Join(homeDir, ".config", "formalshell")
-		if err := os.MkdirAll(historyDir, 0755); err == nil {
-			historyFile = filepath.Join(historyDir, "history")
-		}
-	}
-}
-
-func loadHistory(rl *readline.Instance) error {
-	if historyFile == "" {
-		return nil
-	}
-
-	data, err := os.ReadFile(historyFile)
-	if err != nil {
-		if os.IsNotExist(err) {
-			return nil
-		}
-		return err
-	}
-
-	lines := strings.Split(string(data), "\n")
-	for _, line := range lines {
-		if line = strings.TrimSpace(line); line != "" {
-			rl.SaveHistory(line)
-			// Add full command line to history
-			commandHistory[line] = true
-		}
-	}
-	return nil
-}
-
-func saveHistory(rl *readline.Instance) error {
-	if historyFile == "" {
-		return nil
-	}
-
-	// Get all history items from the command history map
-	var lines []string
-	for cmd := range commandHistory {
-		if cmd = strings.TrimSpace(cmd); cmd != "" {
-			lines = append(lines, cmd)
-		}
-	}
-
-	return os.WriteFile(historyFile, []byte(strings.Join(lines, "\n")+"\n"), 0666)
-}
 
 // displayPrompt generates the shell prompt, showing only the current folder name.
 func displayPrompt() string {
@@ -86,7 +34,7 @@ func displayPrompt() string {
 }
 
 // handleInput processes user input, including pipes and command chaining.
-func handleInput(input string, rl *readline.Instance) {
+func handleInput(input string, rl *readline.Instance, hist *history.History) {
 	input = strings.TrimSpace(input)
 	if input == "" {
 		return
@@ -94,8 +42,8 @@ func handleInput(input string, rl *readline.Instance) {
 
 	// Save the raw input to history immediately
 	if input = strings.TrimSpace(input); input != "" {
-		commandHistory[input] = true
-		if err := saveHistory(rl); err != nil {
+		hist.CommandHistory[input] = true
+		if err := hist.Save(); err != nil {
 			fmt.Printf("Error saving history: %v\n", err)
 		}
 	}
@@ -305,14 +253,26 @@ func loadConfig() {
 
 func main() {
 	// Load config file before starting shell
-	loadConfig()
+	var err error
+	customPath, err = shell.LoadConfig()
+	if err != nil {
+		fmt.Printf("Error loading config: %v\n", err)
+		os.Exit(1)
+	}
+
+	// Initialize history
+	hist, err := history.New()
+	if err != nil {
+		fmt.Printf("Error initializing history: %v\n", err)
+		os.Exit(1)
+	}
 
 	// Configure readline
 	config := &readline.Config{
-		AutoComplete:           completions.CreateCompleter(commandHistory),
+		AutoComplete:           completions.CreateCompleter(hist.CommandHistory),
 		InterruptPrompt:        "^C",
-		EOFPrompt:              "exit",
-		DisableAutoSaveHistory: false, // Enable auto-save history
+		EOFPrompt:             "exit",
+		DisableAutoSaveHistory: false,
 		HistorySearchFold:      true,
 	}
 
@@ -323,31 +283,28 @@ func main() {
 	defer instance.Close()
 
 	// Load command history
-	if err := loadHistory(instance); err != nil {
+	if err := hist.Load(instance); err != nil {
 		fmt.Printf("Error loading history: %v\n", err)
 	}
-	defer saveHistory(instance)
+	defer hist.Save()
 
 	for {
 		instance.SetPrompt(displayPrompt())
 		line, err := instance.Readline()
 		if err != nil {
 			if err == readline.ErrInterrupt {
-				// For Ctrl+C, just continue the loop
-				fmt.Println()  // Add newline for cleaner output
+				fmt.Println()
 				continue
 			} else if err == io.EOF {
-				// Only exit on EOF (Ctrl+D)
 				break
 			}
-			// For other errors, print and continue
 			fmt.Printf("Error: %v\n", err)
 			continue
 		}
-		handleInput(line, instance)
+		handleInput(line, instance, hist)
 
-		// Update completer with new history and save to history
-		instance.Config.AutoComplete = completions.CreateCompleter(commandHistory)
+		// Update completer with new history
+		instance.Config.AutoComplete = completions.CreateCompleter(hist.CommandHistory)
 		instance.SaveHistory(line)
 	}
 
