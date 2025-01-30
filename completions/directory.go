@@ -63,9 +63,13 @@ func CreateCompleter(commandHistory map[string]bool) *readline.PrefixCompleter {
 		readline.PcItemDynamic(func(line string) []string {
 			parts := strings.Fields(line)
 			if len(parts) <= 1 {
+				// Show all directories in current directory
 				return getDirCompletions("")
 			}
-			return getDirCompletions(parts[len(parts)-1])
+			// Get the partial path after "cd "
+			partial := strings.TrimPrefix(line, "cd ")
+			partial = strings.TrimSpace(partial)
+			return getDirCompletions(partial)
 		}))
 
 	completions = append(completions, cdCompleter)

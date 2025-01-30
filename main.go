@@ -306,8 +306,7 @@ func main() {
 		}
 		handleInput(line, instance, hist)
 
-		// Update completer with new history
-		instance.Config.AutoComplete = completions.CreateCompleter(hist.CommandHistory)
+		// Save history but keep the existing completer
 		instance.SaveHistory(line)
 	}
 
