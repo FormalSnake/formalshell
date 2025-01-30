@@ -134,7 +134,7 @@ func GetFileIcon(name string, isDir bool, isExecutable bool, isSymlink bool) str
 	case "dockerfile":
 		return FileIcons["dockerfile"]
 	case ".gitignore":
-		return FileIcons["gitignore"]
+		return FileIcons[".gitignore"]
 	case ".dockerignore":
 		return FileIcons["dockerignore"]
 	}
